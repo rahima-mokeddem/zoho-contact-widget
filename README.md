@@ -42,12 +42,13 @@ I chose Zippopotam.us because it's completely free, requires no API key or signu
 If this were going to production, I'd consider a paid tier (e.g. Google Geocoding API) or a country-specific API for full Canadian/Brazilian postal code coverage.
 
 ## What I'd improve with more time
-- Auto-detect the country from the postal code format itself, so the user doesn't have to manually select a country before typing (this needs care, since postal code formats overlap between countries — e.g. 5 digits could be US or several others — so it would need a priority order or a "did you mean X?" confirmation)
+- Normalize postal code casing automatically (e.g. treat "m5v" the same as "M5V") so lookups aren't case-sensitive
+- Auto-detect the country from the postal code format itself, so the user doesn't have to manually select a country before typing (this needs care, since postal code formats overlap between countries. e.g. 5 digits could be US or several others, so it would need a priority order or a "did you mean X?" confirmation)
 - Expand the country dropdown beyond the 5 currently hardcoded
 - Add more inline guidance next to other fields (similar to the postal code info icon), so the interface is self-explanatory without needing a README
 - Add loading states/spinners during API calls, not just after
 - Debounce the postal code lookup instead of firing only on blur
-- Customize colors, typography, and branding to match the client's visual identity, rather than the current neutral default styling.
+- Customize colors, typography, and branding to match the client's visual identity, rather than the current neutral default styling
 
 ## Assumptions
 - Used Zoho CRM's built-in Mailing Address fields (Mailing_Street, Mailing_City, Mailing_State, Mailing_Zip, Mailing_Country) rather than creating custom fields, since Contacts already support them natively
