@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Quick Editor</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 20px;
+      color: #1f2937;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 480px;
+      margin: 0 auto 16px auto;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .card h3 {
+      margin: 0 0 16px 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: #111827;
+      border-bottom: 1px solid #f3f4f6;
+      padding-bottom: 10px;
+    }
+    .field {
+      margin-bottom: 14px;
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .info-icon {
+      display: inline-block;
+      color: #9ca3af;
+      font-size: 13px;
+      cursor: help;
+      margin-left: 4px;
+      text-transform: none;
+      font-weight: 700;
+    }
+    .info-icon:hover {
+      color: #2563eb;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #f9fafb;
+      color: #9ca3af;
+      transition: all 0.15s;
+    }
+    .field input:disabled, .field select:disabled {
+      cursor: not-allowed;
+    }
+    .field input.editable, .field select.editable {
+      background: #ffffff;
+      color: #111827;
+      border-color: #93c5fd;
+    }
+    .field input.editable:focus, .field select.editable:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    button:hover { opacity: 0.85; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-secondary { background: #f3f4f6; color: #374151; }
+    .status {
+      font-size: 12px;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: none;
+    }
+    .status.show { display: block; }
+    .status.saving { background: #fef3c7; color: #92400e; }
+    .status.success { background: #d1fae5; color: #065f46; }
+    .status.error { background: #fee2e2; color: #991b1b; }
+    .two-col {
+      display: flex;
+      gap: 10px;
+    }
+    .two-col .field { flex: 1; }
+    .hint {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+    .hint.error-hint {
+      color: #b91c1c;
+      display: none;
+    }
+    .hint.error-hint.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h3>Contact Details</h3>
+
+    <div class="two-col">
+      <div class="field">
+        <label>First Name</label>
+        <input type="text" id="First_Name" disabled>
+      </div>
+      <div class="field">
+        <label>Last Name</label>
+        <input type="text" id="Last_Name" disabled>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="Email" disabled>
+    </div>
+
+    <div class="field">
+      <label>Phone</label>
+      <input type="text" id="Phone" disabled>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Mailing Address</h3>
+
+    <div class="two-col">
+      <div class="field">
+        <label>Country</label>
+        <select id="countryCode" disabled>
+          <option value="us">United States</option>
+          <option value="ca">Canada</option>
+          <option value="br">Brazil</option>
+          <option value="gb">United Kingdom</option>
+          <option value="dz">Algeria</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Postal Code
+          <span class="info-icon" title="Auto-fills on blur, best coverage for US/UK/Canada. Other countries may need manual entry.">&#9432;</span>
+        </label>
+        <input type="text" id="Mailing_Zip" disabled>
+        <div class="hint error-hint" id="zipError"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Street Address</label>
+      <input type="text" id="Mailing_Street" disabled>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label>City</label>
+        <input type="text" id="Mailing_City" disabled>
+      </div>
+      <div class="field">
+        <label>State / Province</label>
+        <input type="text" id="Mailing_State" disabled>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Country (record value)</label>
+      <input type="text" id="Mailing_Country" disabled>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-top:0;">
+      <button class="btn-secondary" id="editBtn">Edit</button>
+      <button class="btn-primary" id="saveBtn" style="display:none;">Save</button>
+      <button class="btn-secondary" id="cancelBtn" style="display:none;">Cancel</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="https://live.zwidgets.com/js-sdk/1.2/ZohoEmbededAppSDK.min.js"></script>
+  <script>
+    let recordId = null;
+    let entityModule = null;
+    let originalValues = {};
+
+    const editableFieldIds = [
+      "First_Name", "Last_Name", "Email", "Phone",
+      "Mailing_Zip", "Mailing_Street", "Mailing_City", "Mailing_State", "Mailing_Country"
+    ];
+
+    const countryNameToCode = {
+      "united states": "us",
+      "canada": "ca",
+      "brazil": "br",
+      "united kingdom": "gb",
+      "algeria": "dz"
+    };
+
+    function setEditable(isEditable) {
+      editableFieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        el.disabled = !isEditable;
+        el.classList.toggle("editable", isEditable);
+      });
+      document.getElementById("countryCode").disabled = !isEditable;
+
+      document.getElementById("editBtn").style.display = isEditable ? "none" : "inline-block";
+      document.getElementById("saveBtn").style.display = isEditable ? "inline-block" : "none";
+      document.getElementById("cancelBtn").style.display = isEditable ? "inline-block" : "none";
+    }
+
+    function showStatus(message, type) {
+      const statusEl = document.getElementById("status");
+      statusEl.textContent = message;
+      statusEl.className = "status show " + type;
+    }
+
+    function hideStatus() {
+      document.getElementById("status").className = "status";
+    }
+
+    function populateForm(data) {
+      editableFieldIds.forEach(id => {
+        document.getElementById(id).value = data[id] || "";
+        originalValues[id] = data[id] || "";
+      });
+
+      const savedCountry = (data["Mailing_Country"] || "").trim().toLowerCase();
+      const matchedCode = countryNameToCode[savedCountry];
+      if (matchedCode) {
+        document.getElementById("countryCode").value = matchedCode;
+      }
+      originalValues["countryCode"] = document.getElementById("countryCode").value;
+    }
+
+    function loadRecord() {
+      ZOHO.CRM.API.getRecord({
+        Entity: entityModule,
+        RecordID: recordId
+      }).then(function (response) {
+        const data = response.data[0];
+        populateForm(data);
+      }).catch(function (error) {
+        showStatus("Failed to load contact data.", "error");
+        console.error(error);
+      });
+    }
+
+    document.getElementById("editBtn").addEventListener("click", function () {
+      setEditable(true);
+      hideStatus();
+    });
+
+    document.getElementById("cancelBtn").addEventListener("click", function () {
+      editableFieldIds.forEach(id => {
+        document.getElementById(id).value = originalValues[id];
+      });
+      document.getElementById("countryCode").value = originalValues["countryCode"];
+      setEditable(false);
+      hideStatus();
+      document.getElementById("zipError").classList.remove("show");
+    });
+
+    document.getElementById("saveBtn").addEventListener("click", function () {
+      showStatus("Saving...", "saving");
+
+      const apiData = { id: recordId };
+      editableFieldIds.forEach(id => {
+        apiData[id] = document.getElementById(id).value;
+      });
+
+      ZOHO.CRM.API.updateRecord({
+        Entity: entityModule,
+        APIData: apiData
+      }).then(function (response) {
+        showStatus("Saved successfully.", "success");
+        setEditable(false);
+        loadRecord();
+      }).catch(function (error) {
+        showStatus("Save failed. Please try again.", "error");
+        console.error(error);
+      });
+    });
+
+    function normalizeZip(zip, country) {
+      const trimmed = zip.trim();
+
+      if (country === "br") {
+        const digitsOnly = trimmed.replace(/\D/g, "");
+        if (digitsOnly.length === 8) {
+          return digitsOnly.slice(0, 5) + "-" + digitsOnly.slice(5);
+        }
+      }
+
+      if (country === "ca") {
+        const alnumOnly = trimmed.replace(/\s/g, "").toUpperCase();
+        return alnumOnly.slice(0, 3);
+      }
+
+      return trimmed;
+    }
+
+    document.getElementById("Mailing_Zip").addEventListener("blur", function () {
+      const country = document.getElementById("countryCode").value;
+      const zip = normalizeZip(this.value, country);
+      this.value = zip;
+
+      const errorEl = document.getElementById("zipError");
+      errorEl.classList.remove("show");
+      errorEl.textContent = "";
+
+      if (!zip) return;
+
+      fetch("https://api.zippopotam.us/" + country + "/" + zip)
+        .then(function (res) {
+          if (!res.ok) throw new Error("Postal code not found");
+          return res.json();
+        })
+        .then(function (data) {
+          const place = data.places[0];
+          document.getElementById("Mailing_City").value = place["place name"];
+          document.getElementById("Mailing_State").value = place["state"];
+          document.getElementById("Mailing_Country").value = data["country"];
+        })
+        .catch(function (err) {
+          errorEl.textContent = "Postal code not found for this country/code. Please fill in the address manually.";
+          errorEl.classList.add("show");
+          console.warn("Postal code lookup failed:", err.message);
+        });
+    });
+
+    ZOHO.embeddedApp.on("PageLoad", function (data) {
+      recordId = data.EntityId;
+      entityModule = data.Entity;
+      loadRecord();
+    });
+
+    ZOHO.embeddedApp.init();
+  </script>
+</body>
+</html>
